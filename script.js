@@ -23,6 +23,18 @@ let db = []
 let currentDate = 0
 let scroll = ''
 
+const id = Date.now()
+
+let userId = ''
+
+	if(localStorage.getItem('user-id')){
+		userId = JSON.parse(localStorage.getItem('user-id'))
+	}else{
+		userId = id
+		localStorage.setItem('user-id', id)
+	} 
+
+
 // function currentDay(){
 // 	dateList.forEach(day => {
 // 		if(day.classList.contains('current')){  // =======================доделать чтобы не работало до нужной даты=============================
@@ -246,8 +258,17 @@ dateList.forEach(date => {
 	}
 
 	localStorage.setItem('press', JSON.stringify(idPressBtnArr))
+	
+	sendClick(userId, idParentBtn)
+  }
 
-	// отправка кликов
+
+  function sendClick(userId, idCourse){
+	const formData = new FormData()
+		formData.append('userId' , userId )
+		formData.append('idCourse', idCourse)
+
+	axios.post(linkApp, formData)
   }
 
   popupInfoClose.addEventListener('click', () => {
