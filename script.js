@@ -16,6 +16,9 @@ const popupInfoClose = document.querySelector('.popup-info-close')
 const popupCloseBtn = document.querySelector('.popup-close-btn')
 const mask = document.querySelector('.mask')
 
+
+let idPressBtnArr = localStorage.getItem('press') ? JSON.parse(localStorage.getItem('press')) : []
+
 let db = []
 let currentDate = 0
 let scroll = ''
@@ -36,11 +39,12 @@ const getAllCourses = async () => {
 	  const response = await axios.get(linkApp)
 	  loader.style.display = 'none'
 	  db = response.data.courses
-	  buldCourses(db)
 	  dbChangeRole()
+	  buldCourses(db)
+	  btnView()
 	  clickOnCourse()
 	} catch (err) {
-	  console.error(err)
+	  	console.error(err)
 	}
   }
   getAllCourses()
@@ -78,13 +82,14 @@ dateList.forEach(date => {
 								${item.access_btn === 'yellow' ? `<button data-btn_ids="${item.btn_ids}" class="record-btn">Хочу пойти</button>
 																	<span>Подробнее</span>` 
 																: ''}
+
 								${item.access_btn === 'red' ? `<button data-btn_ids="${item.btn_ids}" class="record-btn">Хочу пойти</button>
 																	<span>Подробнее</span>` 
 																: ''}
+
 								${item.access_btn === 'gray' ? `<button data-btn_ids="${item.btn_ids}" class="record-btn gray">Хочу пойти</button>
 																<button class="record-btn be-speaker">Хочу быть спикером</button>`
 															 : ''}
-								
 							</div>	
 						</div>
 					</div>`
@@ -93,6 +98,19 @@ dateList.forEach(date => {
 	})
   }
 
+  function btnView () {
+	const allButtons = document.querySelectorAll('.record-btn')
+	idPressBtnArr.map(item => {
+		allButtons.forEach(btn => {
+			btn.closest('.course_item').getAttribute('id') === item.split(':')[0]
+				? (btn.classList.add('press'), btn.innerText = 'Отменить') : ''
+
+			btn.dataset.btn_ids === item.split(':')[1] && !btn.classList.contains('press')
+				? btn.setAttribute('disabled', 'disabled') : ''
+		})
+	})
+}
+  
   function clickHandlerDate(item, day, e) {
 	e.preventDefault()
 	const allCourses = document.querySelectorAll('.course_item')
@@ -128,7 +146,7 @@ dateList.forEach(date => {
 
   function clickOnCourse(){
 	const allCourses = document.querySelectorAll('.course_item')
-	console.log(allCourses);
+
 	allCourses.forEach(course => {
 		const btn = course.querySelector('.course_btn_block button')
 		btn && btn.addEventListener('click', (e) => record(e, btn))
@@ -208,6 +226,26 @@ dateList.forEach(date => {
 		}
 	})
 	item.removeAttribute('disabled')
+
+	const idParentBtn = item.closest('.course_item').getAttribute('id')
+	const btn_ids = item.dataset.btn_ids
+
+	const str = idParentBtn + ':' + btn_ids
+
+	if(idPressBtnArr.length < 1){
+		idPressBtnArr.push(str)		
+	}else{
+		const sd = idPressBtnArr.filter(item => item.split(':')[0] === idParentBtn)
+	
+		if(!sd.length){
+			idPressBtnArr.push(str)
+		}else{
+			const filterIdPressBtnArr = idPressBtnArr.filter(id => id.split(':')[0] != sd[0].split(':')[0])
+			idPressBtnArr = filterIdPressBtnArr
+		}
+	}
+
+	localStorage.setItem('press', JSON.stringify(idPressBtnArr))
 
 	// отправка кликов
   }
