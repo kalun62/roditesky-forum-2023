@@ -204,6 +204,11 @@ header .logo{
 .course_btn_block button:disabled{
 	background-color: #5c5b5b;
 }
+.course_btn_block button.gray, .course_btn_block button.be-speaker{
+	width: 49%;
+    padding: 15px 0;
+    font-size: 11px;
+}
 .course_btn_block span{
 	width: 50%;
 	text-align: center;

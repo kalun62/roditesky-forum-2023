@@ -73,13 +73,15 @@ dateList.forEach(date => {
 								<div class="place">${item.place}</div>
 								</div>
 							<div class="course_btn_block">
+								${item.access_btn === 'green' ? `<span>Подробнее</span>` : ''}
+
 								${item.access_btn === 'yellow' ? `<button data-btn_ids="${item.btn_ids}" class="record-btn">Хочу пойти</button>
 																	<span>Подробнее</span>` 
 																: ''}
 								${item.access_btn === 'red' ? `<button data-btn_ids="${item.btn_ids}" class="record-btn">Хочу пойти</button>
 																	<span>Подробнее</span>` 
 																: ''}
-								${item.access_btn === 'gray' ? `<button data-btn_ids="${item.btn_ids}" class="record-btn">Хочу пойти</button>
+								${item.access_btn === 'gray' ? `<button data-btn_ids="${item.btn_ids}" class="record-btn gray">Хочу пойти</button>
 																<button class="record-btn be-speaker">Хочу быть спикером</button>`
 															 : ''}
 								
