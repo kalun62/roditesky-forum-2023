@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Родительский форум</title>
+	<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<header>
+		<img class="logo" src="images/logo-new.jpg" alt="logo">
+		<h1>Программа Родительского Форума <br>"Крепкая семья - сильная Россия"</h1>
+	</header>
+
+	<section class="dates">
+		<ul>
+			<li data-day="28">
+				<a href="#">28 сентября</a>
+			</li>
+			<li data-day="29">
+				<a href="#">29 сентября</a>
+			</li>
+			<li data-day="30">
+				<a href="#">30 сентября</a>
+			</li>
+			<li data-day="1" class="current">
+				<a href="#">1 октября</a>
+			</li>
+		</ul>
+	</section>
+	<section class="courses">
+		<!-- вставка курсов -->
+	</section>
+
+	<div class="loader">
+		<div class="circle"></div>
+	</div>
+
+	<section class="popup-info-wrap">
+		<div class="popup-info-close"></div>
+		<div class="popup-info">
+			<!-- инфо о курсе и спикерах -->
+		</div>
+		<div class="popup-close-btn">Закрыть</div>
+	</section>
+	<div class="mask"></div>
+
+	<script src="libraries/axios.min.js"></script>
+	<script src="script.js"></script>
+</body>
+</html>
