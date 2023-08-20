@@ -17,9 +17,12 @@ const popupCloseBtn = document.querySelector('.popup-close-btn')
 const mask = document.querySelector('.mask')
 
 
+let allButtons
 let idPressBtnArr = localStorage.getItem('press') ? JSON.parse(localStorage.getItem('press')) : []
+let idPressBtnSpeaker = localStorage.getItem('speaker') ? JSON.parse(localStorage.getItem('speaker')) : ''
 
 let db = []
+let clicked = []
 let currentDate = 0
 let scroll = ''
 
@@ -51,6 +54,7 @@ const getAllCourses = async () => {
 	  const response = await axios.get(linkApp)
 	  loader.style.display = 'none'
 	  db = response.data.courses
+	  clicked = response.data.clicked
 	  dbChangeRole()
 	  buldCourses(db)
 	  btnView()
@@ -82,6 +86,8 @@ dateList.forEach(date => {
 
 				: `<div id="${item.id}" data-day="${item.date.split(' ')[0]}" class="course_item ${item.date.split(' ')[0] === currentDate? 'current' : ''}">
 						<p>${item.name}</p>
+
+						${item.access_btn === 'red' ? `<span class="count"></span>` : ''}
 						<div class="course_info_wrap">
 							<div class="course_info">
 								<div class="date">${item.date}</div>
@@ -95,7 +101,7 @@ dateList.forEach(date => {
 																	<span>Подробнее</span>` 
 																: ''}
 
-								${item.access_btn === 'red' ? `<button data-btn_ids="${item.btn_ids}" class="record-btn">Хочу пойти</button>
+								${item.access_btn === 'red' ? `<button data-btn_ids="${item.btn_ids}" class="record-btn red">Хочу пойти</button>
 																	<span>Подробнее</span>` 
 																: ''}
 
@@ -111,14 +117,45 @@ dateList.forEach(date => {
   }
 
   function btnView () {
-	const allButtons = document.querySelectorAll('.record-btn')
+	allButtons = document.querySelectorAll('.record-btn')
+
 	idPressBtnArr.map(item => {
 		allButtons.forEach(btn => {
-			btn.closest('.course_item').getAttribute('id') === item.split(':')[0]
-				? (btn.classList.add('press'), btn.innerText = 'Отменить') : ''
+			if(!btn.classList.contains('be-speaker')){
+				btn.closest('.course_item').getAttribute('id') === item.split(':')[0]
+					? (btn.classList.add('press'), btn.innerText = 'Отменить') : ''
+	
+				btn.dataset.btn_ids === item.split(':')[1] && !btn.classList.contains('press')
+					? btn.setAttribute('disabled', 'disabled') : '';
+			}
+		})
+	})
 
-			btn.dataset.btn_ids === item.split(':')[1] && !btn.classList.contains('press')
-				? btn.setAttribute('disabled', 'disabled') : ''
+	allButtons.forEach(btn => {
+		if(idPressBtnSpeaker){
+			if(btn.classList.contains('be-speaker')){
+				btn.setAttribute('disabled', 'disabled')
+				btn.previousElementSibling.setAttribute('disabled', 'disabled')
+				btn.closest('.course_item').getAttribute('id') == idPressBtnSpeaker
+					? (btn.classList.add('active'), btn.innerText = 'Я спикер' ): ''
+			}
+		}
+	})
+
+	countBtn()
+	
+}
+
+function countBtn() {
+	clicked.map(item => {
+		allButtons.forEach(btn => {
+			if(btn.classList.contains('red') && item.id === btn.closest('.course_item').getAttribute('id')){
+				btn.closest('.course_item').querySelector('.count').innerHTML = item.count+"/"+ item?.max
+				if(item.count >= item.max){
+					btn.setAttribute('disabled', 'disabled')
+					btn.innerText = 'мест нет'
+				}
+			}
 		})
 	})
 }
@@ -160,8 +197,11 @@ dateList.forEach(date => {
 	const allCourses = document.querySelectorAll('.course_item')
 
 	allCourses.forEach(course => {
-		const btn = course.querySelector('.course_btn_block button')
+		const btn = course.querySelector('.course_btn_block .record-btn')
+		const beSpeakerBtn = course.querySelector('.course_btn_block .be-speaker')
+
 		btn && btn.addEventListener('click', (e) => record(e, btn))
+		beSpeakerBtn && beSpeakerBtn.addEventListener('click', (e) => beSpeaker(e, beSpeakerBtn))
 		course.addEventListener('click', () => clickHandlerCourseInfo(course))
 	})
   }
@@ -218,6 +258,57 @@ dateList.forEach(date => {
 	document.body.classList.add('no-scroll')
   }
 
+  function beSpeaker(e, item){
+	e.preventDefault()
+	e.stopPropagation()
+
+	popupInfo.innerHTML = `<div>Требование для записи: 
+								не более 6 слайдов и 6 минут. </div>
+							<form>
+								<input autocomplete="off" type="text" placeholder="Фамилия" name="surname">
+								<input autocomplete="off" type="text" placeholder="Имя" name="name">
+								<input autocomplete="off" type="text" placeholder="Отчество" name="lastname">
+								<input autocomplete="off" type="text" placeholder="Регион" name="region">
+								<input autocomplete="off" type="text" placeholder="Тема" name="theme">
+								<textarea autocomplete="off" type="text" placeholder="Аннотация" name="description"></textarea>
+								<button>Отправить</button>
+							</form>`
+	
+	popupInfoWrap.classList.add('active')
+	popupCloseBtn.remove()
+	mask.classList.add('active')
+	document.body.classList.add('no-scroll')
+	const form = document.querySelector('form')
+	
+	form.addEventListener('submit', function(e){
+		e.preventDefault()
+		
+		item.classList.add('active')
+		item.innerText = 'Я спикер'
+
+		localStorage.setItem('speaker', item.closest('.course_item').getAttribute('id'))
+		
+		const formData = new FormData(form)
+		axios.post(linkApp, formData)	
+
+		popupInfo.innerHTML = `<div class="fin">Спасибо! Ждем вас на площадке!</div>`
+
+
+		setTimeout(() => {
+			popupInfoWrap.classList.remove('active')
+			mask.classList.remove('active')
+			document.body.classList.remove('no-scroll')
+
+			const beSpeakerAllBtn = document.querySelectorAll('.be-speaker')
+			beSpeakerAllBtn.forEach(btn => {
+				btn.setAttribute('disabled', 'disabled')
+				btn.previousElementSibling.setAttribute('disabled', 'disabled')
+			})
+
+		},3000)
+	})
+  }
+
   function record(e, item){
 	e.preventDefault()
 	e.stopPropagation()
@@ -260,6 +351,7 @@ dateList.forEach(date => {
 	localStorage.setItem('press', JSON.stringify(idPressBtnArr))
 	
 	sendClick(userId, idParentBtn)
+	getCount()
   }
 
 
@@ -269,6 +361,16 @@ dateList.forEach(date => {
 		formData.append('idCourse', idCourse)
 
 	axios.post(linkApp, formData)
+  }
+
+  const getCount =  async () => {
+		try {
+			const response = await axios.get(linkApp)
+			clicked = response.data.clicked
+			countBtn()
+		}catch (err) {
+			console.error(err)
+		}
   }
 
   popupInfoClose.addEventListener('click', () => {
