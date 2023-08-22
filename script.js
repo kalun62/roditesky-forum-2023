@@ -241,10 +241,10 @@ function countBtn() {
 			: '';
 		}
 		
-		const moderatorsHTML = generateRoleHTML(currentItem[0]?.moderators, 'Модератор');
-		const speakersHTML = generateRoleHTML(currentItem[0]?.speakers,'Спикеры');
-		const leadersHTML = generateRoleHTML(currentItem[0]?.leaders,'Ведущий');
-		const expertHTML = generateRoleHTML(currentItem[0]?.expert,'Эксперт');
+		const moderatorsHTML = generateRoleHTML(currentItem[0]?.moderators, currentItem[0]?.moderators.length > 1 ? 'Модераторы' : 'Модератор');
+		const speakersHTML = generateRoleHTML(currentItem[0]?.speakers, currentItem[0]?.speakers.length > 1 ? 'Спикеры' : 'Спикер');
+		const leadersHTML = generateRoleHTML(currentItem[0]?.leaders, currentItem[0]?.leaders.length > 1 ? 'Ведущие' : 'Ведущий');
+		const expertHTML = generateRoleHTML(currentItem[0]?.expert, currentItem[0]?.expert.length > 1 ? 'Эксперты' : 'Эксперт');
 	
 	popupInfo.innerHTML += `
 		<h1>${currentItem[0].name}</h1>
@@ -262,8 +262,10 @@ function countBtn() {
 	e.preventDefault()
 	e.stopPropagation()
 
-	popupInfo.innerHTML = `<div>Требование для записи: 
-								не более 6 слайдов и 6 минут. </div>
+	popupInfo.innerHTML = `<div style="text-align:left; margin-bottom:10px;">Требования к выступлению:<br> 
+							- регламент выступления 6 минут, <br>
+							- если предполагается презентация - не более 6 слайдов в формате pptx.</div>
+
 							<form>
 								<input autocomplete="off" type="text" placeholder="Фамилия" name="surname">
 								<input autocomplete="off" type="text" placeholder="Имя" name="name">

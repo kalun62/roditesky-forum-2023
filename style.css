@@ -138,6 +138,10 @@ header .logo{
 	margin-bottom: 10px;
 	padding: 0 15px;
 }
+.course_header h1 span{
+	font-size: .8em;
+    color: gray;
+}
 .course_header p{
 	background-color: #e1e0e05c;
 	width: 100%;
@@ -277,6 +281,7 @@ header .logo{
 	font-size: 1.2em;
 	margin-bottom: 30px;
 }
+
 .popup-info p, .popup-info span{
 	font-size: .8em;
 	line-height: 1.5em;
@@ -296,6 +301,9 @@ header .logo{
 	margin-top: 20px;
 	display: block;
 	border-radius: 10px 10px 0 0;
+}
+.popup-info div{
+	text-align: center;
 }
 .popup-info ul{
 	list-style-type: disclosure-closed;
