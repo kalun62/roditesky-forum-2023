@@ -4,7 +4,7 @@ const linkApp = "https://script.google.com/macros/s/AKfycbxVPPlGoXoVfTN2EpqIL2F2
 // актуальный день
 const today = new Date();
 const now = today.toLocaleString();
-
+const currentTimeShtamp = Date.now()
 
 const loader = document.querySelector('.loader')
 const courses = document.querySelector('.courses')
@@ -38,16 +38,20 @@ let userId = ''
 	} 
 
 
-// function currentDay(){
-// 	dateList.forEach(day => {
-// 		if(day.classList.contains('current')){  // =======================доделать чтобы не работало до нужной даты=============================
-// 			day.classList.remove('current')
-// 		}
-// 		if(day.dataset.day === now.split('.')[0]){
-// 			day.classList.add('current')
-// 		}
-// 	})
-// }
+function currentDay(){
+	if(currentTimeShtamp > 1695848400000){
+		dateList.forEach(day => {
+			if(day.classList.contains('current')){ 
+				day.classList.remove('current')
+			}
+			if(day.dataset.day === now.split('.')[0]){
+				day.classList.add('current')
+			}
+		})
+	}
+}
+
+currentDay()
 
 const getAllCourses = async () => {
 	try {
@@ -87,7 +91,7 @@ dateList.forEach(date => {
 				: `<div id="${item.id}" data-day="${item.date.split(' ')[0]}" class="course_item ${item.date.split(' ')[0] === currentDate? 'current' : ''}">
 						<p>${item.name}</p>
 
-						${item.access_btn === 'red' ? `<span class="count"></span>` : ''}
+						${item.access_btn === 'red' || item.access_btn === 'gray' ? `<span class="count"></span>` : ''}
 						<div class="course_info_wrap">
 							<div class="course_info">
 								<div class="date">${item.date}</div>
@@ -105,7 +109,7 @@ dateList.forEach(date => {
 																	<span>Подробнее</span>` 
 																: ''}
 
-								${item.access_btn === 'gray' ? `<button data-btn_ids="${item.btn_ids}" class="record-btn gray">Хочу пойти</button>
+								${item.access_btn === 'gray' ? `<button ${currentTimeShtamp < 1696021200000 ? `disabled="disabled"` : ''} data-btn_ids="${item.btn_ids}" class="record-btn gray">Хочу пойти</button>
 																<button class="record-btn be-speaker">Хочу быть спикером</button>`
 															 : ''}
 							</div>	
@@ -154,6 +158,13 @@ function countBtn() {
 				if(item.count >= item.max){
 					btn.setAttribute('disabled', 'disabled')
 					btn.innerText = 'мест нет'
+				}
+			}
+			if(btn.classList.contains('be-speaker') && item.id === btn.closest('.course_item').getAttribute('id')){
+				console.log(item);
+				btn.closest('.course_item').querySelector('.count').innerHTML = item.count+"/"+ item?.max
+				if(item.count >= item.max){
+					btn.setAttribute('disabled', 'disabled')
 				}
 			}
 		})
@@ -262,17 +273,18 @@ function countBtn() {
 	e.preventDefault()
 	e.stopPropagation()
 
-	popupInfo.innerHTML = `<div style="text-align:left; margin-bottom:10px;">Требования к выступлению:<br> 
-							- регламент выступления 6 минут, <br>
-							- если предполагается презентация - не более 6 слайдов в формате pptx.</div>
-
+	popupInfo.innerHTML = `<div style="text-align:left; margin-bottom:10px;">Требования к выступлению:</div> 
+							<ul>
+							<li>регламент выступления 6 минут; </li>
+							<li>если предполагается презентация - не более 6 слайдов в формате pptx.</li>
+							</ul>
 							<form>
 								<input autocomplete="off" type="text" placeholder="Фамилия" name="surname">
 								<input autocomplete="off" type="text" placeholder="Имя" name="name">
 								<input autocomplete="off" type="text" placeholder="Отчество" name="lastname">
 								<input autocomplete="off" type="text" placeholder="Регион" name="region">
 								<input autocomplete="off" type="text" placeholder="Тема" name="theme">
-								<textarea autocomplete="off" type="text" placeholder="Аннотация" name="description"></textarea>
+								<textarea autocomplete="off" type="text" placeholder="Краткая аннотация, 2-3 предложения" name="description"></textarea>
 								<button>Отправить</button>
 							</form>`
 	
@@ -295,7 +307,8 @@ function countBtn() {
 
 		popupInfo.innerHTML = `<div class="fin">Спасибо! Ждем вас на площадке!</div>`
 
-
+		sendClick(userId, item.closest('.course_item').getAttribute('id'))
+		getCount()
 		setTimeout(() => {
 			popupInfoWrap.classList.remove('active')
 			mask.classList.remove('active')
