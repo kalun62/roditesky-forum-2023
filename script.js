@@ -275,8 +275,8 @@ function countBtn() {
 
 	popupInfo.innerHTML = `<div style="text-align:left; margin-bottom:10px;">Требования к выступлению:</div> 
 							<ul>
-							<li>регламент выступления 6 минут; </li>
-							<li>если предполагается презентация - не более 6 слайдов в формате pptx.</li>
+							<li>регламент выступления – 6 минут; </li>
+							<li>если предполагается презентация – не более 6 слайдов в формате pptx.</li>
 							</ul>
 							<form>
 								<input autocomplete="off" type="text" placeholder="Фамилия" name="surname">
@@ -284,7 +284,7 @@ function countBtn() {
 								<input autocomplete="off" type="text" placeholder="Отчество" name="lastname">
 								<input autocomplete="off" type="text" placeholder="Регион" name="region">
 								<input autocomplete="off" type="text" placeholder="Тема" name="theme">
-								<textarea autocomplete="off" type="text" placeholder="Краткая аннотация, 2-3 предложения" name="description"></textarea>
+								<textarea autocomplete="off" type="text" placeholder="Краткая аннотация, 2–3 предложения" name="description"></textarea>
 								<button>Отправить</button>
 							</form>`
 	
