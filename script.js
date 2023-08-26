@@ -247,7 +247,7 @@ function countBtn() {
 	  const currentItem = db.filter(course => +course.id === +item.getAttribute('id'))
 	  function generateRoleHTML(role, title) {
 		  return role
-			? `<h2>${title}:</h2>${role.map(sp => sp.photo ? `<div class="info-card"><img src="${sp.photo}" alt="foto"><div>${sp.name}</div></div>` 
+			? `<h2>${title}:</h2>${role.map(sp => sp.photo ? `<div class="info-card"><img src="${sp.photo}" alt="foto"><div><h2>${sp.name.split(',')[0]},</h2><span>${sp.name.slice(sp.name.indexOf(",") + 1)}</span></div></div>` 
 															: `<div>${sp.name}</div>`).join('')}`
 			: '';
 		}

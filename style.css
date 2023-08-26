@@ -394,6 +394,13 @@ header .logo{
 	padding: 10px 5px;
 	font-size: .8em;
 }
+.popup-info .info-card h2{
+	text-align: center;
+	margin: 0;
+}
+.popup-info .info-card span{
+	padding: 0;
+}
 .popup-info ul{
 	list-style-type: disclosure-closed;
 	padding-left: 30px;
