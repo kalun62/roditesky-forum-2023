@@ -359,6 +359,11 @@ header .logo{
 	margin-bottom: 15px;
 	text-align: justify;
 }
+.popup-info p img{
+	width: 100%;
+    margin-top: 10px;
+    border-radius: 8px;
+}
 .popup-info h2{
 	text-align:left;
 	font-size: 1.2em;
