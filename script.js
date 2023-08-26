@@ -153,14 +153,14 @@ dateList.forEach(date => {
 function countBtn() {
 	clicked.map(item => {
 		allButtons.forEach(btn => {
-			if(btn.classList.contains('red') && item.id === btn.closest('.course_item').getAttribute('id')){
+			if(btn.classList.contains('red') && +item.id === +btn.closest('.course_item').getAttribute('id')){
 				btn.closest('.course_item').querySelector('.count').innerHTML = item.count+"/"+ item?.max
 				if(item.count >= item.max){
 					btn.setAttribute('disabled', 'disabled')
 					btn.innerText = 'мест нет'
 				}
 			}
-			if(btn.classList.contains('be-speaker') && item.id === btn.closest('.course_item').getAttribute('id')){
+			if(btn.classList.contains('be-speaker') && +item.id === +btn.closest('.course_item').getAttribute('id')){
 				console.log(item);
 				btn.closest('.course_item').querySelector('.count').innerHTML = item.count+"/"+ item?.max
 				if(item.count >= item.max){
@@ -296,34 +296,71 @@ function countBtn() {
 	
 	form.addEventListener('submit', function(e){
 		e.preventDefault()
-		
-		item.classList.add('active')
-		item.innerText = 'Я спикер'
+		const inputs = document.querySelectorAll('input')
+		const textarea = document.querySelectorAll('textarea')
+		validate(inputs)
+		validate(textarea)
 
-		localStorage.setItem('speaker', item.closest('.course_item').getAttribute('id'))
-		
-		const formData = new FormData(form)
-		axios.post(linkApp, formData)	
+		let error = document.querySelector('.error')
 
-		popupInfo.innerHTML = `<div class="fin">Спасибо! Ждем вас на площадке!</div>`
+		if(!error){
+			item.classList.add('active')
+			item.innerText = 'Я спикер'
 
-		sendClick(userId, item.closest('.course_item').getAttribute('id'))
-		getCount()
-		setTimeout(() => {
-			popupInfoWrap.classList.remove('active')
-			mask.classList.remove('active')
-			document.body.classList.remove('no-scroll')
+			localStorage.setItem('speaker', item.closest('.course_item').getAttribute('id'))
+			
+			const formData = new FormData(form)
+			axios.post(linkApp, formData)	
 
-			const beSpeakerAllBtn = document.querySelectorAll('.be-speaker')
-			beSpeakerAllBtn.forEach(btn => {
-				btn.setAttribute('disabled', 'disabled')
-				btn.previousElementSibling.setAttribute('disabled', 'disabled')
-			})
+			popupInfo.innerHTML = `<div class="fin">Спасибо! Ждем вас на площадке!</div>`
 
-		},3000)
+			sendClick(userId, item.closest('.course_item').getAttribute('id'))
+			getCount()
+			setTimeout(() => {
+				popupInfoWrap.classList.remove('active')
+				mask.classList.remove('active')
+				document.body.classList.remove('no-scroll')
+
+				const beSpeakerAllBtn = document.querySelectorAll('.be-speaker')
+				beSpeakerAllBtn.forEach(btn => {
+					btn.setAttribute('disabled', 'disabled')
+					btn.previousElementSibling.setAttribute('disabled', 'disabled')
+				})
+
+			},3000)
+		}
 	})
   }
 
+ 
+	function validate(items){
+		items.forEach(item => {
+			(item.value === '')
+				? (item.classList.add('error'), errorLabels(item))
+				: item.classList.remove('error')
+		
+			item.addEventListener('focus', () => {
+				if(item.nextElementSibling.classList.contains('label')){
+					item.nextElementSibling.remove()
+				}
+				item.classList.remove('error')
+			})		
+		})	
+	}
+
+	function errorLabels(input) {
+		let errorLabel = document.createElement('label')
+		if(input.classList.contains('error')){
+			errorLabel.setAttribute('for', input.name)
+			errorLabel.classList.add('label')
+			errorLabel.innerHTML = `* Заполните поле`
+			if(!input.nextElementSibling.classList.contains('label')){
+				input.after(errorLabel)
+			}
+		}else{
+			errorLabel.remove()
+		}
+	}
   function record(e, item){
 	e.preventDefault()
 	e.stopPropagation()
