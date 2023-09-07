@@ -161,10 +161,10 @@ function countBtn() {
 				}
 			}
 			if(btn.classList.contains('be-speaker') && +item.id === +btn.closest('.course_item').getAttribute('id')){
-				console.log(item);
 				btn.closest('.course_item').querySelector('.count').innerHTML = item.count+"/"+ item?.max
 				if(item.count >= item.max){
 					btn.setAttribute('disabled', 'disabled')
+					btn.innerText = 'Спикеры набраны'
 				}
 			}
 		})
@@ -261,7 +261,7 @@ function countBtn() {
 		<h1>${currentItem[0].name}</h1>
 		<p>${currentItem[0].description}</p>
 		
-		${moderatorsHTML}${speakersHTML}${leadersHTML}${expertHTML}`
+		${speakersHTML}${moderatorsHTML}${leadersHTML}${expertHTML}`
 	  
 	  
 	popupInfoWrap.classList.add('active')
@@ -279,6 +279,7 @@ function countBtn() {
 							<li>если предполагается презентация – не более 6 слайдов в формате pptx.</li>
 							</ul>
 							<form>
+								<input type="hidden" placeholder="Площадка" name="place" value="${item.closest('.course_item').querySelector('p').innerText}">
 								<input autocomplete="off" type="text" placeholder="Фамилия" name="surname">
 								<input autocomplete="off" type="text" placeholder="Имя" name="name">
 								<input autocomplete="off" type="text" placeholder="Отчество" name="lastname">
@@ -310,7 +311,7 @@ function countBtn() {
 			localStorage.setItem('speaker', item.closest('.course_item').getAttribute('id'))
 			
 			const formData = new FormData(form)
-			axios.post(linkApp, formData)	
+			axios.post(linkApp, formData)
 
 			popupInfo.innerHTML = `<div class="fin">Спасибо! Ждем вас на площадке!</div>`
 
@@ -436,6 +437,10 @@ function countBtn() {
 
   window.addEventListener('scroll', () => {
 	scroll = scrollY
-	scroll > 107 ? dates.classList.add('fixed') : dates.classList.remove('fixed')
+	if(window.innerWidth > 768){
+		scroll > 1120 ? dates.classList.add('fixed') : dates.classList.remove('fixed')
+	}
+	if(window.innerWidth < 767){
+		scroll > 331 ? dates.classList.add('fixed') : dates.classList.remove('fixed')
+	}
   })
-

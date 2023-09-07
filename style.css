@@ -311,6 +311,7 @@ header .logo{
 	justify-content: center;
 	align-items: center;
 	z-index: 999;
+	cursor: pointer;
 }
 .popup-info-close span{
 	width: 100%;
@@ -352,7 +353,7 @@ header .logo{
 	padding: 0 15px;
 }
 
-.popup-info p, .popup-info span{
+.popup-info p{
 	padding: 0 15px;
 	font-size: 1em;
 	line-height: 1.5em;
@@ -372,13 +373,12 @@ header .logo{
 .popup-info .info-card{
 	position: relative;
 	display: flex;
-	align-items: center;
 	margin-bottom: 20px;
 	border: 1px solid #ccc;
     border-radius: 15px;
 	background-color: #e1e1e130;
 	overflow: hidden;
-	
+	align-items: center;
 }
 
 .popup-info h3{
@@ -393,13 +393,28 @@ header .logo{
 	text-align: center;
 	padding: 10px 5px;
 	font-size: .8em;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	margin: 0 auto;
 }
 .popup-info .info-card h2{
 	text-align: center;
 	margin: 0;
+	margin-bottom: 4px;
+	font-size: 1em;
 }
 .popup-info .info-card span{
 	padding: 0;
+	line-height: 1em;
+	text-align: center;
+	font-size: .9em;
+	height: auto;
+	max-height: 80px;
+	overflow-y: auto;
+}
+.popup-info .info-card span::-webkit-scrollbar{
+	width: 1px;
 }
 .popup-info ul{
 	list-style-type: disclosure-closed;
@@ -491,4 +506,39 @@ textarea:not(.error){
     justify-content: center;
     font-size: 20px;
     color: orange;
+}
+
+@media (min-width: 768px) {
+	header h1 {
+		font-size: 22px;
+	}
+	.courses{
+		/* display: flex; */
+	}
+	.course_item{
+		width: 700px;
+		/* flex: 1 1 400px; */
+	}
+	.popup-info-wrap.active{
+		width: 50%;
+		left: calc(50% - 25%);
+	}
+	.popup-info::-webkit-scrollbar{
+		width: 5px;
+		padding: 10px 0;
+	}
+	.popup-info::-webkit-scrollbar-thumb{
+		border-radius: 8px;
+		width: 5px;
+		background-color: #5c5b5b;
+	}
+}
+/* tags */
+iframe{
+	width: 100%;
+	height: 100vh;
+}
+
+#app .logo{
+	display: none !important;
 }
