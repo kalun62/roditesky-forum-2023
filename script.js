@@ -110,7 +110,7 @@ dateList.forEach(date => {
 																: ''}
 
 								${item.access_btn === 'gray' ? `<button ${currentTimeShtamp < 1696021200000 ? `disabled="disabled"` : ''} data-btn_ids="${item.btn_ids}" class="record-btn gray">Хочу пойти</button>
-																<button class="record-btn be-speaker">Хочу быть спикером</button>`
+																<button class="record-btn be-speaker">Стать спикером</button>`
 															 : ''}
 							</div>	
 						</div>
