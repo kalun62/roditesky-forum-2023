@@ -88,7 +88,7 @@ dateList.forEach(date => {
 						${item.description && `<p>${item.description}</p>`}
 					</div>`
 
-				: `<div id="${item.id}" data-day="${item.date.split(' ')[0]}" class="course_item ${item.date.split(' ')[0] === currentDate? 'current' : ''}">
+				: `<div id="${item.id}" data-day="${item.date.split(' ')[0]}" class="course_item ${item.date.split(' ')[0] === currentDate? 'current' : ''} ${item.access_btn === 'gray' ? 'speaker' : ''}">
 						<p>${item.name}</p>
 
 						${item.access_btn === 'red' || item.access_btn === 'gray' ? `<span class="count"></span>` : ''}
@@ -248,7 +248,7 @@ function countBtn() {
 	  function generateRoleHTML(role, title) {
 		  return role
 			? `<h2>${title}:</h2>${role.map(sp => sp.photo ? `<div class="info-card"><img src="${sp.photo}" alt="foto"><div><h2>${sp.name.split(',')[0]},</h2><span>${sp.name.slice(sp.name.indexOf(",") + 1)}</span></div></div>` 
-															: `<div>${sp.name}</div>`).join('')}`
+															: `<div class="info-card"><div><h2>${sp.name.split('&')[0].toUpperCase().trim()},</h2><h2>${sp.name.split('&')[1]}</h2><span class="text">${sp.name.split('&')[2]}</span></div></div>`).join('')}`
 			: '';
 		}
 		
@@ -256,15 +256,33 @@ function countBtn() {
 		const speakersHTML = generateRoleHTML(currentItem[0]?.speakers, currentItem[0]?.speakers.length > 1 ? 'Спикеры' : 'Спикер');
 		const leadersHTML = generateRoleHTML(currentItem[0]?.leaders, currentItem[0]?.leaders.length > 1 ? 'Ведущие' : 'Ведущий');
 		const expertHTML = generateRoleHTML(currentItem[0]?.expert, currentItem[0]?.expert.length > 1 ? 'Эксперты' : 'Эксперт');
-	
-	popupInfo.innerHTML += `
-		<h1>${currentItem[0].name}</h1>
-		<p>${currentItem[0].description}</p>
 		
-		${speakersHTML}${moderatorsHTML}${leadersHTML}${expertHTML}`
-	  
-	  
+		if(item.classList.contains('speaker')){
+			popupInfo.innerHTML += `
+			<h1>${currentItem[0].name}</h1>
+			<p>${currentItem[0].description}</p>
+			${moderatorsHTML}${speakersHTML}${leadersHTML}${expertHTML}`
+		}else{
+			popupInfo.innerHTML += `
+			<h1>${currentItem[0].name}</h1>
+			<p>${currentItem[0].description}</p>
+			${leadersHTML}${speakersHTML}${moderatorsHTML}${expertHTML}`
+		}
+	
+		// if(item.id == 5){
+		// 	const text = popupInfo.querySelector('h1').innerText
+		// 	const firstHeader = text.split(',')[0]
+		// 	const secHeader = document.createElement('h1')
+		// 	secHeader.innerText = text.split(',')[1]
+		// 	popupInfo.querySelector('h1').innerText = firstHeader
+
+		// 	const h2 = popupInfo.querySelector('h2')
+		// 	const infoCards = popupInfo.querySelectorAll('.info-card')
+		// 	popupInfo.querySelector('h1').after(h2, infoCards[0], infoCards[1], secHeader)
+
+		// }
 	popupInfoWrap.classList.add('active')
+	popupInfo.scrollTop = 0;
 	mask.classList.add('active')
 	document.body.classList.add('no-scroll')
   }
@@ -279,6 +297,7 @@ function countBtn() {
 							<li>если предполагается презентация – не более 6 слайдов в формате pptx.</li>
 							</ul>
 							<form>
+								<input type="hidden" placeholder="" name="id_user" value="${userId}">
 								<input type="hidden" placeholder="Площадка" name="place" value="${item.closest('.course_item').querySelector('p').innerText}">
 								<input autocomplete="off" type="text" placeholder="Фамилия" name="surname">
 								<input autocomplete="off" type="text" placeholder="Имя" name="name">

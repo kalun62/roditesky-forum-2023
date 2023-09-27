@@ -386,6 +386,10 @@ header .logo{
 	font-size: 1rem;
 	margin-bottom: 10px;
 }
+
+.popup-info .info-card .text{
+	text-align: justify;
+}
 .popup-info .info-card img{
 	width: 30%;
 	display: block;
